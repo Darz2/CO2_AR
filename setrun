@@ -1,0 +1,52 @@
+#!/bin/bash
+species="CO2_Ar"
+directory=$(pwd)
+Press=( $(seq 35 10 125) )  # 293 in bar
+#Press+=("70")
+declare -p Press
+Temp=("253")  # in K
+block=6
+sim=3
+iter=1
+for T in ${Temp[@]}
+do
+    for P in ${Press[@]}
+    do
+        for ((i=1; i<=block; i++))
+        do
+	        for ((j=1; j<=sim; j++))
+	        do
+
+                fold="$species/T_${T}_P_${P}/block_${i}/sim_${j}"
+                foldIn="${fold}/INPUT"
+
+                mkdir -p ${foldIn}
+
+                seed=$(expr $iter \* 1000)
+
+                cp files/T_${T}_P_${P}/settings.in     ./ 
+                cp files/T_${T}_P_${P}/forcefield.in     ./ 
+                cp files/T_${T}_P_${P}/topology.in     ./ 
+
+                sed -i "11s/1669196305/${seed}/g" 	settings.in
+                sed -i "11s/.true./.false./1g" 	settings.in
+                sed -i "11s/.false./.true./3g" 	settings.in
+
+                mv settings.in         ${foldIn}/
+                mv topology.in         ${foldIn}/
+                mv forcefield.in       ${foldIn}/
+
+                cp files/run           ${fold}/
+                cp files/T_${T}_P_${P}/restart.in   ${foldIn}/
+                cp files/T_${T}_P_${P}/AR         ${foldIn}/
+                cp files/T_${T}_P_${P}/CO2          ${foldIn}/
+
+                iter=$((iter+1))
+	        done
+       done
+    done
+done
+wait    
+
+
+                

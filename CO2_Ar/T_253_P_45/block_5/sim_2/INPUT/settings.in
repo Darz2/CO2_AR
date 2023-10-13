@@ -1,0 +1,80 @@
+Nbox    Temperature  Pressure   Reduced Units?
+ 2          253       45 bar          .false.
+-------------------------------------------------------
+Nproduction    Nequilibrate   Ninitialize
+   1E5             1E5            1E4
+-------------------------------------------------------
+Nconfiguration    Ndata        Naverage       Nrdf
+   5E4             1E2            1E0         0E0
+-------------------------------------------------------
+Init?    Weight?   Seed?       Seed
+.false.   .false.  .true.   32000
+-------------------------------------------------------
+RDF_Molecule? RDF_Atom?   Insertions?   WolfPlot?
+   .true.     .true.      .false.      .false.
+-------------------------------------------------------
+ WL?   Fmod  Fred  Flatc  Linear?  Spline?  dU/dL?
+.true.  0.1   4.0   0.2   .false.  .false.  .false.
+
+####################################################
+
+---------- Translation Moves ------------
+Normal     Pair      Cluster    Smart
+  33          0          0         0
+
+------------ Rotation Moves -------------
+Normal     Pair      Cluster    Smart
+  33          0          0         0
+
+------------- Volume Moves --------------
+Normal    Cluster
+  1          0
+
+--------- Intramolecular Moves ----------
+Bending   Torsion
+  0          0
+
+------------ Lambda Moves ---------------
+Normal     GCMC
+  25          0
+
+----------- CFC Hybrid Moves ------------
+NVT/NPT      Gibbs       Reaction
+  0            25            0
+
+--------- Hybrid Move Switches ---------
+NVT/NPT      Gibbs       Reaction
+0.0 1.0    0.3 0.7      0.0  1.0
+
+####################################################
+
+Nbox           =  Number of simulation boxes (1 or 2)
+Temperature    =  temperature in Kelvin
+Pressure       =  pressure + unit (Pa,hPa,kPa,MPa,bar,red)
+Reduced Units  =  use reduced units (epsilon for energy, sigma for length...)
+---------------------------------------------------------------------------------------------
+Nproduction    =  number of production MC cycles
+Nequilibrate   =  number of equilibrating MC cycles (build weightfunction, optimize deltas)
+Ninitialize    =  number of initializing MC cycles (only translation and rotation)
+---------------------------------------------------------------------------------------------
+Nconfiguration =  write configuration every Nconfiguration cycles
+Ndata          =  write data every Ndata cycles
+Naverage       =  update averages every Naverage cycles
+Nrdf           =  update RDF every Nrdf cycles
+---------------------------------------------------------------------------------------------
+Init?          =  start with random configuration?
+Weight?        =  use input weightfunction from file?
+Seed?          =  use a fixed seed (=Seed (4 byte)) for the RNG?
+---------------------------------------------------------------------------------------------
+RDF_Molecule?  =  calculate RDF for moleculetypes?
+RDF_Atom?      =  calculate RDF for atomtypes?
+Insertions?    =  use insertion methods for chemical potential, enthalpy and partial volume?
+WolfPlot?      =  calculate energies for different Wolf parameters (to create a 'Wolf plot')?
+---------------------------------------------------------------------------------------------
+WL?            =  use Wang Landau scheme to obtain a weightfunction?
+Fmod           =  modulation parameter for Wang Landau
+Fred           =  reduction factor of the modulation parameter
+Flatc          =  flatness criterion parameter for Wang Landau
+Linear?        =  use linear interpolation for the weightfunction?
+Spline?        =  use a spline for interpolation of the weightfunction?
+dU_dL?         =  calculate dU/dlambda?

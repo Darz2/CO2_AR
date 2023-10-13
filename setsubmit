@@ -1,0 +1,51 @@
+#!/bin/bash
+
+#SBATCH -t 3-00:00:00
+#SBATCH -p genoa
+#SBATCH -N 1
+#SBATCH --ntasks=180
+#SBATCH --mem=60G
+#SBATCH --mail-type=BEGIN,END
+#SBATCH --mail-user=d.raju@tudelft.nl
+
+species="CO2_Ar"
+directory=$(pwd)
+Press=( $(seq 35 10 125) )  # 293 in bar
+#Press+=("70")
+declare -p Press
+Temp=("253")  # in K
+block=6
+sim=3
+iter=1
+
+
+for T in ${Temp[@]}
+do
+    for P in ${Press[@]}
+    do	    
+        for ((i=1; i<=block; i++))
+        do
+            for ((j=1; j<=sim; j++))
+            do
+
+		        if [ ${iter} -le $SLURM_NTASKS ]
+		        then
+
+			        echo ${iter}
+					echo ${SLURM_NTASKS}
+
+			        fold="$species/T_${T}_P_${P}/block_${i}/sim_${j}"
+			        cd ${fold}
+			        ./run -g -o  & 
+			        cd ${directory}
+
+			        iter=$((iter+1))
+                else
+			        exit    
+
+		        fi
+	        done
+	    done
+    done
+done
+wait

@@ -1,0 +1,52 @@
+#!/bin/bash
+species="CO2_Ar_t"
+src="files_src"
+directory=$(pwd)
+Press=( $(seq 25 10 135) )  # 253 in bar
+declare -p Press
+
+Temp=("253")  # in K
+
+#count=0
+for T in ${Temp[@]}
+do
+    for P in ${Press[@]}
+    do
+    
+        fold="$species/T_${T}_P_${P}"
+        foldIn="${fold}/INPUT"
+
+        echo ${fold}
+        mkdir -p ${foldIn}
+
+        cp ${src}/settings.in     ./
+        cp ${src}/topology.in     ./   
+        cp ${src}/forcefield.in   ./
+
+        sed -i "2s/bar/${P} bar/g"          settings.in
+        sed -i "2s/K/${T}/g"                settings.in
+
+        C1_G=$(awk -v num="$P" '$1 ~ "\\y"num"\\y"' "molecules.dat" | awk '{print $2}')
+        C2_G=$(awk -v num="$P" '$1 ~ "\\y"num"\\y"' "molecules.dat" | awk '{print $3}')
+        C1_L=$(awk -v num="$P" '$1 ~ "\\y"num"\\y"' "molecules.dat" | awk '{print $4}')
+        C2_L=$(awk -v num="$P" '$1 ~ "\\y"num"\\y"' "molecules.dat" | awk '{print $5}')
+
+        sed -i "2s/C1_L/${C1_L}/g"             topology.in # ch4 in box1
+        sed -i "2s/C1_G/${C1_G}/g"             topology.in  # ch4 in box2
+        sed -i "3s/C2_L/${C2_L}/g"             topology.in  # co2 in box1
+        sed -i "3s/C2_G/${C2_G}/g"             topology.in  # co2 in box2
+
+        mv settings.in         ${foldIn}/
+        mv topology.in         ${foldIn}/
+        mv forcefield.in       ${foldIn}/
+
+        cp ${src}/run           ${fold}/
+        cp ${src}/script        ${fold}/
+        cp ${src}/CO2           ${foldIn}/
+        cp ${src}/AR          ${foldIn}/
+        # done
+    done
+    # count=$((count+1))
+
+done
+wait    

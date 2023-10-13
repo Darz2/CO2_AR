@@ -1,0 +1,60 @@
+#!/bin/bash
+if [ $# -eq 0 ]; then
+   ${BRICK_DIR_GE}/EXECUTABLES/Brick_Intel_Optimized
+else
+   res=1
+   while [ "$1" != "" ]; do
+      case $1 in
+         -i | --intel | --ifort )         res=$((2*res))
+                                                         ;;
+         -g | --gnufortran | --gfortran ) res=$((3*res))
+                                                         ;;
+         -d | --debug )                   res=$((5*res))
+                                                         ;;
+         -o | --optimize )                res=$((7*res))
+                                                         ;;
+         -t | --terminal )                res=$((11*res))
+                                                         ;;
+      esac
+      shift
+   done
+
+   if [ $res -eq 2 ]; then
+      ${BRICK_DIR_GE}/EXECUTABLES/Brick_Intel_Optimized
+   elif [ $res -eq 3 ]; then
+      ${BRICK_DIR_GE}/EXECUTABLES/Brick_GNUFortran_Optimized
+   elif [ $res -eq 5 ]; then
+      ${BRICK_DIR_GE}/EXECUTABLES/Brick_Intel_Debug
+   elif [ $res -eq 7 ]; then
+      ${BRICK_DIR_GE}/EXECUTABLES/Brick_Intel_Optimized
+   elif [ $res -eq 10 ]; then
+      ${BRICK_DIR_GE}/EXECUTABLES/Brick_Intel_Debug
+   elif [ $res -eq 11 ]; then
+      ${BRICK_DIR_GE}/EXECUTABLES/Brick_Intel_Optimized -t
+   elif [ $res -eq 14 ]; then
+      ${BRICK_DIR_GE}/EXECUTABLES/Brick_Intel_Optimized
+   elif [ $res -eq 15 ]; then
+      ${BRICK_DIR_GE}/EXECUTABLES/Brick_GNUFortran_Debug
+   elif [ $res -eq 21 ]; then
+      ${BRICK_DIR_GE}/EXECUTABLES/Brick_GNUFortran_Optimized
+   elif [ $res -eq 22 ]; then
+      ${BRICK_DIR_GE}/EXECUTABLES/Brick_Intel_Optimized -t
+   elif [ $res -eq 33 ]; then
+      ${BRICK_DIR_GE}/EXECUTABLES/Brick_GNUFortran_Optimized -t
+   elif [ $res -eq 55 ]; then
+      ${BRICK_DIR_GE}/EXECUTABLES/Brick_Intel_Debug -t
+   elif [ $res -eq 77 ]; then
+      ${BRICK_DIR_GE}/EXECUTABLES/Brick_Intel_Optimized -t
+   elif [ $res -eq 110 ]; then
+      ${BRICK_DIR_GE}/EXECUTABLES/Brick_Intel_Debug -t
+   elif [ $res -eq 154 ]; then
+      ${BRICK_DIR_GE}/EXECUTABLES/Brick_Intel_Optimized -t
+   elif [ $res -eq 165 ]; then
+      ${BRICK_DIR_GE}/EXECUTABLES/Brick_GNUFortran_Debug -t
+   elif [ $res -eq 231 ]; then
+      ${BRICK_DIR_GE}/EXECUTABLES/Brick_GNUFortran_Optimized -t
+   else
+      echo "Options or combination of options not allowed."
+   fi
+
+fi
